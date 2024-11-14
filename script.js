@@ -259,14 +259,30 @@ audio.addEventListener("ended", () => {
     } else {
       userData.currentSong = null;
       userData.songCurrentTime = 0;  
-      pauseSong()
-       setPlayerDisplay()
-       highlightCurrentSong()
-      setPlayButtonAccessibleText()
 
 
     }
 });
+document.getElementById("songUpload").addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const songURL = reader.result;
+      const newSong = {
+        id: userData.songs.length, // New ID for the added song
+        title: file.name.replace(/\.[^/.]+$/, ""), // Title without file extension
+        artist: "Unknown Artist",
+        duration: "Unknown", // Placeholder duration
+        src: songURL,
+      };
+      userData.songs.push(newSong); // Add to playlist array
+      renderSongs(userData.songs);   // Refresh the playlist display
+    };
+    reader.readAsDataURL(file); // Read file as a data URL
+  }
+});
+
 
 const sortSongs = () => {
   userData?.songs.sort((a,b) => {
